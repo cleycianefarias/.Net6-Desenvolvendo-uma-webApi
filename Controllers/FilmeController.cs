@@ -35,9 +35,9 @@ public class FilmeController : ControllerBase
 
     [HttpGet]
     //recupera todos os filmes correspondentes
-    public IEnumerable<Filme> RecuperaFilme()
+    public IEnumerable<Filme> RecuperaFilme([FromQuery]int skip = 0, [FromQuery]int take = 50)
     {
-        return filmes;
+        return filmes.Skip(skip).Take(take);
     }
 
     [HttpGet("{id}")]
@@ -46,6 +46,8 @@ public class FilmeController : ControllerBase
     {
         return filmes.FirstOrDefault(filme => filme.Id == id);
     }
+
+    //paginação: posso pegar trechos reduzidos em .nt
 
 
 }
