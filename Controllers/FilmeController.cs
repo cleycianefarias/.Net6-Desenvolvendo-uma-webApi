@@ -13,7 +13,7 @@ public class FilmeController : ControllerBase
 
     [HttpPost]
     //inserindo filmes
-    public void AdicionaFilme([FromBody]Filme filme)
+    public IActionResult AdicionaFilme([FromBody]Filme filme)
     {
         #region
         // O método abaixo funciona, porém não é um método eficiente
@@ -28,8 +28,7 @@ public class FilmeController : ControllerBase
 
         filme.Id = id++;
         filmes.Add(filme);
-        Console.WriteLine(filme.Titulo);
-        Console.WriteLine(filme.Duracao);
+        return CreatedAtAction(nameof(RecuperaFilmePorId), new {id = filme.Id}, filme);
     }
 
 
@@ -42,9 +41,15 @@ public class FilmeController : ControllerBase
 
     [HttpGet("{id}")]
     //recupera filme por id
-    public Filme? RecuperaFilmePorId(int id)
+    public IActionResult RecuperaFilmePorId(int id)
     {
-        return filmes.FirstOrDefault(filme => filme.Id == id);
+        var filme = filmes.FirstOrDefault(filme => filme.Id == id);
+        if (filme ==null)
+        {
+            return NotFound();
+
+        }
+        return Ok(filme);
     }
 
     //paginação: posso pegar trechos reduzidos em .nt
